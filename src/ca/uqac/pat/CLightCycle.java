@@ -13,7 +13,7 @@ public class CLightCycle extends Thread{
 	protected int 		Direction;
 	protected int		Vitesse;
 	protected String Color;
-	protected List<Point> lastPos;
+	protected List<Point> previousPositions;
 	
 	public CLightCycle(	IEcranGUI ecran, int posX, int posY, 
 			int direction, 	int vitesse, String color) {
@@ -23,7 +23,7 @@ public class CLightCycle extends Thread{
 		this.PosY 	= posY;		
 		this.Vitesse = vitesse;
 		this.Color = color;
-		this.lastPos = new ArrayList<Point>();
+		this.previousPositions = new ArrayList<>();
 		start();
 	}
 	
@@ -31,7 +31,7 @@ public class CLightCycle extends Thread{
 		ImageIcon Icon = new ImageIcon (Color + ".gif");
 		Ecran.setIcon ((int)PosY, (int)PosX, Icon);
 		Point p = new Point(this.PosX, this.PosY);
-		lastPos.add(p);
+		previousPositions.add(p);
 	}
 	
 	protected void move(){
@@ -72,11 +72,11 @@ public class CLightCycle extends Thread{
 			System.out.println("Collision bord bas");
 		
 		//Collision avec le player et l'IA
-		for(Point p : lastPos){
+		for(Point p : previousPositions){
 			//System.out.println("x :"+p.x+", y:"+p.y);
 			if(this.PosX == p.x && this.PosY == p.y){
 				System.out.println("Collision");
-				//Stopper thread, le tuer, et recréer l'écran de jeu
+				//Stopper thread, le tuer, et recrï¿½er l'ï¿½cran de jeu
 				try {
 					sleep(2000);
 				} catch (InterruptedException e) {
