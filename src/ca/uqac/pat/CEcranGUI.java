@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
-	public final JFrame 	Fen;		// La fenêtre d'interface
+	public final JFrame 	Fen;		// La fenï¿½tre d'interface
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -22,7 +22,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	public CEcranGUI(){
 		this (50, 10, 80, 10, 12, null);
 		Fen.addKeyListener(this);
-		player = new CPlayer(this, 12, 20, 4, 1, "White");
+		player = new CPlayer(this, 12, 20, 4, 2, "White");
 	}
 
 
