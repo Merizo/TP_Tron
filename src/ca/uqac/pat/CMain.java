@@ -8,7 +8,7 @@ public class CMain {
 		int Largeur = 65;
 		int Hauteur = 65;
 		
-		ImageIcon Im = new ImageIcon ("Black.gif");		
+		ImageIcon Im = new ImageIcon ("Black.jpg");
 		CEcranGUI Ecran = new CEcranGUI (Hauteur, Largeur, Im);
 		
 		/*CLightCycle ForceOrange= new CLightCycle(ecran, 12, 30, 10, 1, "Orange");
