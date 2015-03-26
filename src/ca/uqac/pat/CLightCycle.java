@@ -31,7 +31,7 @@ public class CLightCycle extends Thread {
     }
 
     protected void display() {
-        ImageIcon Icon = new ImageIcon(color + ".gif");
+        ImageIcon Icon = new ImageIcon(color + ".jpg");
         ecran.setIcon((int) posY, (int) posX, Icon);
         Point p = new Point(this.posX, this.posY);
         previousPositions.add(p);
