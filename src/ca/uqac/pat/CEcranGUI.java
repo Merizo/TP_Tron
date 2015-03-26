@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
-	public final JFrame 	Fen;		// La fen�tre d'interface
+	public final JFrame 	Fen;		// La fenetre d'interface
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -19,29 +19,27 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private CPlayer player;
 
 
-	public CEcranGUI(){
-		this (50, 10, 80, 10, 12, null);
-		Fen.addKeyListener(this);
-		player = new CPlayer(this, 12, 20, 4, 2, "White");
-	}
-
-
-	public CEcranGUI(int nbrLignes, int hauteur){
-		this (nbrLignes, 10, hauteur, 10, 12, null);
-		Fen.addKeyListener(this);
-	}
+//	public CEcranGUI(){
+//		this(50, 10, 80, 10, 12, null);
+//		Fen.addKeyListener(this);
+//	}
+//
+//
+//	public CEcranGUI(int nbrLignes, int hauteur){
+//		this (nbrLignes, 10, hauteur, 10, 12, null);
+//		Fen.addKeyListener(this);
+//	}
 
 
 	public CEcranGUI(int nbrLignes, int hauteur, ImageIcon fond){
-		this (nbrLignes, 10, hauteur, 10, 8, fond);
+		this(nbrLignes, 10, hauteur, 10, 8, fond);
 		Fen.addKeyListener(this);
-		player = new CPlayer(this, 12, 20, 4, 1, "White");
 	}
 
 
-	public CEcranGUI(int nbrLignes, int hauteur, int size){
-		this (nbrLignes, 10, hauteur, 10, size, null);
-	}
+//	public CEcranGUI(int nbrLignes, int hauteur, int size){
+//		this(nbrLignes, 10, hauteur, 10, size, null);
+//	}
 
 	/** Le constructeur complet. */
 	public CEcranGUI(	int nbrLignes, 		int hauteur, 
@@ -69,6 +67,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 				Grille[y][x].setBorder(BorderFactory.createEmptyBorder());
 			}
 		Fen = new CFrameEcran (this, NbrColonnes*largeur, NbrLignes*hauteur);
+
+		player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 2, "White");
 	}
 
 	public void gameOver(){
@@ -82,7 +82,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		if (Lig >= Grille.length || Lig < 0)		return false;
 		if (Col >= Grille[Lig].length || Col< 0) 	return false;
 
-		Grille[Lig][Col].setIcon (Im);
+		Grille[Lig][Col].setIcon(Im);
 		return true;
 	}
 
@@ -102,16 +102,16 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
         {
         case KeyEvent.VK_DOWN :
             System.out.println("Bas");
-            player.Direction=1;
+            player.direction = CLightCycle.Direction.DOWN;
             break;
         case KeyEvent.VK_LEFT :
-        	player.Direction=3;
+        	player.direction = CLightCycle.Direction.LEFT;
             break;
         case KeyEvent.VK_RIGHT :
-        	player.Direction=4;
+        	player.direction = CLightCycle.Direction.RIGHT;
             break;
         case KeyEvent.VK_UP :
-        	player.Direction=2;
+        	player.direction = CLightCycle.Direction.UP;
             break;
         default :
     	}
