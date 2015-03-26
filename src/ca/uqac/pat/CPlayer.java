@@ -1,13 +1,8 @@
 package ca.uqac.pat;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.ImageIcon;
-
 public class CPlayer extends CLightCycle{
 
-	public CPlayer(	IEcranGUI ecran, int posX, int posY, int direction, int vitesse, String color) {
+	public CPlayer(	IEcranGUI ecran, int posX, int posY, CLightCycle.Direction direction, int vitesse, String color) {
 		super(ecran, posX, posY, direction, vitesse, color);
 	}
 	
@@ -29,7 +24,7 @@ public class CPlayer extends CLightCycle{
 			
 			if (endTime < startTime + fps)
 				try{
-					sleep ((fps - (endTime - startTime)) / Vitesse);
+					sleep ((fps - (endTime - startTime)) / vitesse);
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				}
