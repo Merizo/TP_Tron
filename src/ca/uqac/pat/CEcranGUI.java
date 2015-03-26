@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
-	public final JFrame 	Fen;		// La fen�tre d'interface
+	public final JFrame 	Fen;		// La fen�tre d'interface
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -73,8 +73,19 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 
 	public void gameOver(){
 		
-		 String name = JOptionPane.showInputDialog(this,
-                 "Voulez vous rejouer?", null);
+		int makeAChoice = JOptionPane.showConfirmDialog(
+			    this.Fen,
+			    "T'as tu envie de rejouer?",
+			    "An Inane Question",
+			    JOptionPane.YES_NO_OPTION);
+		
+		//Si oui, réinitialise le jeu
+		if(makeAChoice == 0){
+
+		}
+		else{
+			
+		}
 	}
 	
 
@@ -101,17 +112,21 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
         switch (e.getKeyCode())
         {
         case KeyEvent.VK_DOWN :
-            System.out.println("Bas");
-            player.Direction=1;
+            //Si la direction n'est pas déjà haut ou bas
+        	if(player.Direction != 1 && player.Direction != 2)
+        		player.Direction=1;
             break;
         case KeyEvent.VK_LEFT :
-        	player.Direction=3;
+        	if(player.Direction != 3 && player.Direction != 4)
+        		player.Direction=3;
             break;
         case KeyEvent.VK_RIGHT :
-        	player.Direction=4;
+        	if(player.Direction != 3 && player.Direction != 4)
+        		player.Direction=4;
             break;
         case KeyEvent.VK_UP :
-        	player.Direction=2;
+        	if(player.Direction != 1 && player.Direction != 2)
+        		player.Direction=2;
             break;
         default :
     	}

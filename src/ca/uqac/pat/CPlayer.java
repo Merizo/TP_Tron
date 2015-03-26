@@ -20,7 +20,7 @@ public class CPlayer extends CLightCycle{
 		
 		while (true){
 			long startTime = System.currentTimeMillis();
-			long fps = 1000/10;
+			long fps = 60;
 					
 			super.move();
 			super.display();
