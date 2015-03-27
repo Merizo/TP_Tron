@@ -6,18 +6,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
-	public final JFrame 	Fen;		// La fenetre d'interface
-	public static List<Point> usedCoord;
+	public final  JFrame           Fen;        // La fenetre d'interface
+	public static ArrayList<Point> usedCoord;
 
-	private int 			NbrLignes;
-	private int 			NbrColonnes;
-	private JLabel[][] 		Grille;
-	private CPlayer player;
+	private int        NbrLignes;
+	private int        NbrColonnes;
+	private JLabel[][] Grille;
+	private CPlayer    player;
 
 
 //	public CEcranGUI(){
@@ -84,7 +85,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		
 		//Si oui, réinitialise le jeu
 		if(makeAChoice == 0){
-			player = new CPlayer(this, 12, 20, 4, 1, "White");
+			player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 1, "White");
 			this.reset();
 		}
 		else{
@@ -94,7 +95,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	
 	public void reset(){
 		
-		ImageIcon Icon = new ImageIcon ("Black.gif");
+		ImageIcon Icon = new ImageIcon ("Black.jpg");
 		
 		for (int y=0; y < Grille.length; y++)
 			for (int x = 0; x < Grille[y].length; x++){
@@ -129,23 +130,23 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
             System.out.println("Bas");
             player.direction = CLightCycle.Direction.DOWN;
             //Si la direction n'est pas déjà haut ou bas
-        	if(player.Direction != 1 && player.Direction != 2)
-        		player.Direction=1;
+        	if(player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
+        		player.direction = CLightCycle.Direction.DOWN;
             break;
         case KeyEvent.VK_LEFT :
         	player.direction = CLightCycle.Direction.LEFT;
-        	if(player.Direction != 3 && player.Direction != 4)
-        		player.Direction=3;
+        	if(player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
+        		player.direction = CLightCycle.Direction.LEFT;
             break;
         case KeyEvent.VK_RIGHT :
         	player.direction = CLightCycle.Direction.RIGHT;
-        	if(player.Direction != 3 && player.Direction != 4)
-        		player.Direction=4;
+			if(player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
+        		player.direction = CLightCycle.Direction.RIGHT;
             break;
         case KeyEvent.VK_UP :
         	player.direction = CLightCycle.Direction.UP;
-        	if(player.Direction != 1 && player.Direction != 2)
-        		player.Direction=2;
+			if(player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
+        		player.direction = CLightCycle.Direction.UP;
             break;
         default :
     	}
@@ -154,15 +155,13 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	public int getNbrLignes() {
