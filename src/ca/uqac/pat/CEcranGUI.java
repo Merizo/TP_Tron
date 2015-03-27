@@ -12,6 +12,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
 	public final JFrame 	Fen;		// La fenetre d'interface
+	public static List<Point> usedCoord;
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -48,6 +49,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		NbrLignes 		= nbrLignes;
 		NbrColonnes		= nbrColonnes;
 
+		this.usedCoord = new ArrayList<Point>();
+		
 		setLayout (new GridLayout(NbrLignes, NbrColonnes, 0 ,0));
 
 
@@ -73,8 +76,30 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 
 	public void gameOver(){
 		
-		 String name = JOptionPane.showInputDialog(this,
-                 "Voulez vous rejouer?", null);
+		int makeAChoice = JOptionPane.showConfirmDialog(
+			    this.Fen,
+			    "T'as tu envie de rejouer?",
+			    "An Inane Question",
+			    JOptionPane.YES_NO_OPTION);
+		
+		//Si oui, réinitialise le jeu
+		if(makeAChoice == 0){
+			player = new CPlayer(this, 12, 20, 4, 1, "White");
+			this.reset();
+		}
+		else{
+			
+		}
+	}
+	
+	public void reset(){
+		
+		ImageIcon Icon = new ImageIcon ("Black.gif");
+		
+		for (int y=0; y < Grille.length; y++)
+			for (int x = 0; x < Grille[y].length; x++){
+				setIcon(x, y, Icon);
+			}
 	}
 	
 
@@ -103,15 +128,24 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
         case KeyEvent.VK_DOWN :
             System.out.println("Bas");
             player.direction = CLightCycle.Direction.DOWN;
+            //Si la direction n'est pas déjà haut ou bas
+        	if(player.Direction != 1 && player.Direction != 2)
+        		player.Direction=1;
             break;
         case KeyEvent.VK_LEFT :
         	player.direction = CLightCycle.Direction.LEFT;
+        	if(player.Direction != 3 && player.Direction != 4)
+        		player.Direction=3;
             break;
         case KeyEvent.VK_RIGHT :
         	player.direction = CLightCycle.Direction.RIGHT;
+        	if(player.Direction != 3 && player.Direction != 4)
+        		player.Direction=4;
             break;
         case KeyEvent.VK_UP :
         	player.direction = CLightCycle.Direction.UP;
+        	if(player.Direction != 1 && player.Direction != 2)
+        		player.Direction=2;
             break;
         default :
     	}
