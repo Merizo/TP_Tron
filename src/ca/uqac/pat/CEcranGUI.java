@@ -6,12 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
 	public final JFrame 	Fen;		// La fen�tre d'interface
+	public static List<Point> usedCoord;
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -36,6 +39,9 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		this (nbrLignes, 10, hauteur, 10, 8, fond);
 		Fen.addKeyListener(this);
 		player = new CPlayer(this, 12, 20, 4, 1, "White");
+		CLightCycle ForceOrange= new CLightCycle(this, 50, 30, 2, 1, "Orange");
+		//CLightCycle ForcePurple= new CLightCycle(this, 12, 75, 1, 1, "Purple");
+		CLightCycle ForceGreen= new CLightCycle(this, 65, 50, 3, 1, "Green");
 	}
 
 
@@ -50,6 +56,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		NbrLignes 		= nbrLignes;
 		NbrColonnes		= nbrColonnes;
 
+		this.usedCoord = new ArrayList<Point>();
+		
 		setLayout (new GridLayout(NbrLignes, NbrColonnes, 0 ,0));
 
 
@@ -81,11 +89,22 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		
 		//Si oui, réinitialise le jeu
 		if(makeAChoice == 0){
-
+			player = new CPlayer(this, 12, 20, 4, 1, "White");
+			this.reset();
 		}
 		else{
 			
 		}
+	}
+	
+	public void reset(){
+		
+		ImageIcon Icon = new ImageIcon ("Black.gif");
+		
+		for (int y=0; y < Grille.length; y++)
+			for (int x = 0; x < Grille[y].length; x++){
+				setIcon(x, y, Icon);
+			}
 	}
 	
 

@@ -18,7 +18,7 @@ public class CPlayer extends CLightCycle{
 
 		super.display();
 		
-		while (true){
+		while (isRunning){
 			long startTime = System.currentTimeMillis();
 			long fps = 60;
 					
@@ -33,7 +33,17 @@ public class CPlayer extends CLightCycle{
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				}
-		}
+		}	
+	}
+	
+	@Override
+	protected boolean collided() {
+		// TODO Auto-generated method stub
+		if(super.collided())
+			this.Ecran.gameOver();
 		
+		
+		
+		return false;
 	}
 }

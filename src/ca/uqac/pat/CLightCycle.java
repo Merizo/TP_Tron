@@ -13,7 +13,7 @@ public class CLightCycle extends Thread{
 	protected int 		Direction;
 	protected int		Vitesse;
 	protected String Color;
-	protected List<Point> lastPos;
+	protected boolean isRunning;
 	
 	public CLightCycle(	IEcranGUI ecran, int posX, int posY, 
 			int direction, 	int vitesse, String color) {
@@ -23,16 +23,42 @@ public class CLightCycle extends Thread{
 		this.PosY 	= posY;		
 		this.Vitesse = vitesse;
 		this.Color = color;
-		this.lastPos = new ArrayList<Point>();
+		this.isRunning = true;
 		start();
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		super.run();
+
+		display();
+		
+		while (isRunning){
+			long startTime = System.currentTimeMillis();
+			long fps = 60;
+					
+			move();
+			display();
+	
+			long endTime = System.currentTimeMillis();
+			
+			if (endTime < startTime + fps)
+				try{
+					sleep ((fps - (endTime - startTime)) / Vitesse);
+				} catch (InterruptedException e){
+					e.printStackTrace();
+				}
+		}	
 	}
 	
 	protected void display(){
 		ImageIcon Icon = new ImageIcon (Color + ".gif");
 		Ecran.setIcon ((int)PosY, (int)PosX, Icon);
 		Point p = new Point(this.PosX, this.PosY);
-		lastPos.add(p);
+		CEcranGUI.usedCoord.add(p);
 	}
+	
 	
 	protected void move(){
 		switch(this.Direction){
@@ -53,39 +79,48 @@ public class CLightCycle extends Thread{
 		collided();
 	}
 	
-	protected void collided(){
+	protected void kill(){
+		this.isRunning = false;
+	}
+	
+	protected boolean collided(){
 		//Collision avec les bords
 		//Bord gauche
-		if(this.PosX == 0)
-			this.Ecran.gameOver();
+		if(this.PosX == 0){
+			this.kill();
+			return true;
+		}
+			
 		
 		//Bord droit
-		if(this.PosX == this.Ecran.getNbrColonnes())
-			System.out.println("Collision bord droit");
+		if(this.PosX == this.Ecran.getNbrColonnes()){
+			this.kill();
+			return true;
+		}
 			
 		//Bord haut
-		if(this.PosY == 0)
-			System.out.println("Collision bord haut");
+		if(this.PosY == 0){
+			this.kill();
+			return true;
+		}
 		
 		//Bord bas
-		if(this.PosY == this.Ecran.getNbrLignes())
-			System.out.println("Collision bord bas");
+		if(this.PosY == this.Ecran.getNbrLignes()){
+			this.kill();
+			return true;
+		}
 		
 		//Collision avec le player et l'IA
-		for(Point p : lastPos){
+		for(Point p : CEcranGUI.usedCoord){
 			//System.out.println("x :"+p.x+", y:"+p.y);
 			if(this.PosX == p.x && this.PosY == p.y){
-				System.out.println("Collision");
-				//Stopper thread, le tuer, et recréer l'écran de jeu
-				try {
-					sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					this.kill();
+					return true;
 			}
 				
 		}
+		
+		return false;
 	}
 	
 }
