@@ -14,12 +14,14 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
 	public final JFrame 	Fen;		// La fen�tre d'interface
-	public static List<Point> usedCoord;
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
 	private JLabel[][] 		Grille;
 	private CPlayer player;
+	private CLightCycle forceOrange;
+	private CLightCycle forceVerte;
+	private boolean gameOver;
 
 
 	public CEcranGUI(){
@@ -40,8 +42,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		Fen.addKeyListener(this);
 		player = new CPlayer(this, 12, 20, 4, 1, "White");
 		CLightCycle ForceOrange= new CLightCycle(this, 50, 30, 2, 1, "Orange");
-		//CLightCycle ForcePurple= new CLightCycle(this, 12, 75, 1, 1, "Purple");
-		CLightCycle ForceGreen= new CLightCycle(this, 65, 50, 3, 1, "Green");
+		CLightCycle ForceVerte= new CLightCycle(this, 65, 50, 3, 1, "Green");
+		this.gameOver=false;
 	}
 
 
@@ -55,8 +57,6 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 						int sizeText, 		ImageIcon fond) {
 		NbrLignes 		= nbrLignes;
 		NbrColonnes		= nbrColonnes;
-
-		this.usedCoord = new ArrayList<Point>();
 		
 		setLayout (new GridLayout(NbrLignes, NbrColonnes, 0 ,0));
 
@@ -77,6 +77,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 				Grille[y][x].setBorder(BorderFactory.createEmptyBorder());
 			}
 		Fen = new CFrameEcran (this, NbrColonnes*largeur, NbrLignes*hauteur);
+		CGame.usedCoord.clear();
 	}
 
 	public void gameOver(){
@@ -87,25 +88,21 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 			    "An Inane Question",
 			    JOptionPane.YES_NO_OPTION);
 		
+
+		
 		//Si oui, réinitialise le jeu
 		if(makeAChoice == 0){
-			player = new CPlayer(this, 12, 20, 4, 1, "White");
-			this.reset();
+			this.gameOver = true;
+			System.out.println("Changement du boolean");
 		}
-		else{
-			
-		}
+		
 	}
 	
-	public void reset(){
-		
-		ImageIcon Icon = new ImageIcon ("Black.gif");
-		
-		for (int y=0; y < Grille.length; y++)
-			for (int x = 0; x < Grille[y].length; x++){
-				setIcon(x, y, Icon);
-			}
+	public boolean getGameOver(){
+		return this.gameOver;
 	}
+	
+
 	
 
 	public boolean setIcon (int Lig, int Col, Icon Im){
@@ -147,6 +144,9 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
         	if(player.Direction != 1 && player.Direction != 2)
         		player.Direction=2;
             break;
+        case KeyEvent.VK_ESCAPE :
+        	System.exit(0);
+        	break;
         default :
     	}
     }

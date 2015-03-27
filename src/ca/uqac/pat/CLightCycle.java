@@ -56,7 +56,7 @@ public class CLightCycle extends Thread{
 		ImageIcon Icon = new ImageIcon (Color + ".gif");
 		Ecran.setIcon ((int)PosY, (int)PosX, Icon);
 		Point p = new Point(this.PosX, this.PosY);
-		CEcranGUI.usedCoord.add(p);
+		CGame.usedCoord.add(p);
 	}
 	
 	
@@ -111,7 +111,7 @@ public class CLightCycle extends Thread{
 		}
 		
 		//Collision avec le player et l'IA
-		for(Point p : CEcranGUI.usedCoord){
+		for(Point p : CGame.usedCoord){
 			//System.out.println("x :"+p.x+", y:"+p.y);
 			if(this.PosX == p.x && this.PosY == p.y){
 					this.kill();
