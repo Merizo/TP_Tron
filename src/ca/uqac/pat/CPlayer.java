@@ -8,12 +8,9 @@ public class CPlayer extends CLightCycle{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		super.run();
-
 		super.display();
 		
-		while (true){
+		while (alive){
 			long startTime = System.currentTimeMillis();
 			long fps = 1000/10;
 					

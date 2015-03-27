@@ -8,7 +8,7 @@ import java.util.List;
 import static ca.uqac.pat.CLightCycle.Direction.*;
 
 public class CLightCycle extends Thread {
-    protected static enum Direction {UP, DOWN, LEFT, RIGHT}
+    protected enum Direction {UP, DOWN, LEFT, RIGHT}
 
     protected IEcranGUI   ecran;
     protected double      posX;
@@ -17,9 +17,11 @@ public class CLightCycle extends Thread {
     protected int         vitesse;
     protected String      color;
     protected List<Point> previousPositions;
+    protected boolean     alive;
 
     public CLightCycle(IEcranGUI ecran, int posX, int posY,
                        Direction direction, int vitesse, String color) {
+        alive = true;
         this.ecran = ecran;
         this.direction = direction;
         this.posX = posX;

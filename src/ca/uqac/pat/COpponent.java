@@ -11,5 +11,40 @@ public class COpponent extends CLightCycle {
         opponentDifficulty = difficulty;
     }
 
+    @Override
+    public void run() {
+        super.display();
 
+        while (alive){
+            long startTime = System.currentTimeMillis();
+            long fps = 1000/10;
+
+            setDirection(opponentDifficulty);
+            super.move();
+            super.display();
+
+            long endTime = System.currentTimeMillis();
+
+            if (endTime < startTime + fps)
+                try{
+                    sleep ((fps - (endTime - startTime)) / vitesse);
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+        }
+
+    }
+
+    private void setDirection(Difficulty opponentDifficulty) {
+        switch (opponentDifficulty) {
+            case EASY:
+                break;
+
+            case MEDIUM:
+                break;
+
+            case HARD:
+                break;
+        }
+    }
 }
