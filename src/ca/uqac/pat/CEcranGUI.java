@@ -93,7 +93,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		//Si oui, réinitialise le jeu
 		if(makeAChoice == 0){
 			this.gameOver = true;
-			System.out.println("Changement du boolean");
+		}else{
+			System.exit(0);
 		}
 		
 	}

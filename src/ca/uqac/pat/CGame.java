@@ -1,6 +1,7 @@
 package ca.uqac.pat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -13,10 +14,10 @@ public class CGame {
 	public static List<Point> usedCoord;
 	
 	public CGame() {
-		// TODO Auto-generated constructor stub
 		this.isRunning = true;
-		this.usedCoord = new ArrayList<Point>();
-		//this.play();
+		
+		//Initialisation de la liste synchronized pour gérer les accès multiples
+		this.usedCoord = Collections.synchronizedList(new ArrayList<Point>());
 	}
 	
 	public void play(){
