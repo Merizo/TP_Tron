@@ -2,6 +2,8 @@ package ca.uqac.pat;
 
 import javax.swing.ImageIcon;
 
+
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,9 @@ public class CLightCycle extends Thread{
 		ImageIcon Icon = new ImageIcon (Color + ".gif");
 		Ecran.setIcon ((int)PosY, (int)PosX, Icon);
 		Point p = new Point(this.PosX, this.PosY);
-		CGame.usedCoord.add(p);
+		synchronized(CGame.usedCoord) {
+			CGame.usedCoord.add(p);
+		}
 	}
 	
 	
@@ -110,15 +114,24 @@ public class CLightCycle extends Thread{
 			return true;
 		}
 		
-		//Collision avec le player et l'IA
+		/*//Collision avec le player et l'IA
 		for(Point p : CGame.usedCoord){
 			//System.out.println("x :"+p.x+", y:"+p.y);
 			if(this.PosX == p.x && this.PosY == p.y){
 					this.kill();
 					return true;
-			}
-				
+			}		
+		}*/
+		
+	synchronized(CGame.usedCoord) {
+		for(Point p : CGame.usedCoord){
+			//System.out.println("x :"+p.x+", y:"+p.y);
+			if(this.PosX == p.x && this.PosY == p.y){
+					this.kill();
+					return true;
+			}		
 		}
+	}
 		
 		return false;
 	}

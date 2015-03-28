@@ -77,6 +77,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 				Grille[y][x].setBorder(BorderFactory.createEmptyBorder());
 			}
 		Fen = new CFrameEcran (this, NbrColonnes*largeur, NbrLignes*hauteur);
+		Fen.setTitle("Lab 3 : Tr0n game");
 		CGame.usedCoord.clear();
 	}
 
