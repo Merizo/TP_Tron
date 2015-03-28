@@ -90,7 +90,7 @@ public class CLightCycle extends Thread{
 	protected boolean collided(){
 		//Collision avec les bords
 		//Bord gauche
-		if(this.PosX == 0){
+		if(this.PosX < 0){
 			this.kill();
 			return true;
 		}
@@ -103,7 +103,7 @@ public class CLightCycle extends Thread{
 		}
 			
 		//Bord haut
-		if(this.PosY == 0){
+		if(this.PosY < 0){
 			this.kill();
 			return true;
 		}
