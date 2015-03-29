@@ -8,16 +8,16 @@ import java.util.List;
 public class CLightCycle extends Thread {
     protected enum Direction {UP, DOWN, LEFT, RIGHT}
 
-    protected IEcranGUI   ecran;
-    protected double      posX;
-    protected double      posY;
+    protected CEcranGUI   ecran;
+    protected int         posX;
+    protected int         posY;
     protected Direction   direction;
     protected int         vitesse;
     protected String      color;
     protected List<Point> lastPos;
     protected boolean     alive;
 
-    public CLightCycle(IEcranGUI ecran, int posX, int posY,
+    public CLightCycle(CEcranGUI ecran, int posX, int posY,
                        Direction direction, int vitesse, String color) {
         this.ecran = ecran;
         this.direction = direction;
@@ -80,11 +80,11 @@ public class CLightCycle extends Thread {
             if (this.posX == p.x && this.posY == p.y) {
                 System.out.println("Collision");
                 //Stopper thread, le tuer, et recr�er l'�cran de jeu
-                try {
+                /*try {
                     sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
         }

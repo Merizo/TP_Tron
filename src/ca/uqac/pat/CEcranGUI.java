@@ -19,6 +19,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private int        NbrColonnes;
 	private JLabel[][] Grille;
 	private CPlayer    player;
+	private COpponent  botRandom;
 
 
 //	public CEcranGUI(){
@@ -72,7 +73,11 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 			}
 		Fen = new CFrameEcran (this, NbrColonnes*largeur, NbrLignes*hauteur);
 
-		player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 2, "White");
+		drawWalls();
+
+		player = new CPlayer(this, 50, 20, CLightCycle.Direction.RIGHT, 1, "White");
+		botRandom = new COpponent(this, 50, 50, CLightCycle.Direction.LEFT, 1, "Purple", COpponent.Difficulty.COWARD);
+
 	}
 
 	public void gameOver(){
@@ -87,9 +92,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		if(makeAChoice == 0){
 			player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 1, "White");
 			this.reset();
-		}
-		else{
-			
+
 		}
 	}
 	
@@ -101,6 +104,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 			for (int x = 0; x < Grille[y].length; x++){
 				setIcon(x, y, Icon);
 			}
+
+		drawWalls();
 	}
 	
 
@@ -117,7 +122,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		if (Lig >= Grille.length) 		return false;
 		if (Col >= Grille[Lig].length) 	return false;
 
-		Grille[Lig][Col].setText (txt);
+		Grille[Lig][Col].setText(txt);
 		return true;
 	}		
 	
@@ -170,6 +175,22 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	
 	public int getNbrColonnes() {
 		return NbrColonnes;
+	}
+
+	public JLabel[][] getGrille() { return Grille;}
+
+	public CPlayer getPlayer() { return player; }
+
+	private void drawWalls() {
+		for (int i = 0; i < getNbrLignes(); i++) {
+			Grille[i][0].setIcon(new ImageIcon ("Grey.jpg"));
+			Grille[i][getNbrColonnes()-1].setIcon(new ImageIcon ("Grey.jpg"));
+		}
+
+		for (int j = 0 ; j < getNbrColonnes() ; j++) {
+			Grille[0][j].setIcon(new ImageIcon ("Grey.jpg"));
+			Grille[getNbrLignes()-1][j].setIcon(new ImageIcon ("Grey.jpg"));
+		}
 	}
 }
 

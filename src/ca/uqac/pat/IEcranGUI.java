@@ -8,4 +8,5 @@ public interface IEcranGUI {
 	public abstract void gameOver();
 	public abstract int getNbrLignes();
 	public abstract int getNbrColonnes();
+	public abstract JLabel[][] getGrille();
 }
