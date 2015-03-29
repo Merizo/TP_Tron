@@ -86,7 +86,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 		int makeAChoice = JOptionPane.showConfirmDialog(
 			    this.Fen,
 			    "T'as tu envie de rejouer?",
-			    "An Inane Question",
+			    null,
 			    JOptionPane.YES_NO_OPTION);
 		
 

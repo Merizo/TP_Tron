@@ -94,7 +94,6 @@ public class CLightCycle extends Thread{
 			this.kill();
 			return true;
 		}
-			
 		
 		//Bord droit
 		if(this.PosX == this.Ecran.getNbrColonnes()){
