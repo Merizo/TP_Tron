@@ -2,93 +2,137 @@ package ca.uqac.pat;
 
 import javax.swing.ImageIcon;
 
+
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ca.uqac.pat.CLightCycle.Direction.*;
-
 public class CLightCycle extends Thread {
-    protected static enum Direction {UP, DOWN, LEFT, RIGHT}
+    public enum Direction {UP, DOWN, LEFT, RIGHT}
 
-    protected IEcranGUI   ecran;
-    protected double      posX;
-    protected double      posY;
-    protected Direction   direction;
-    protected int         vitesse;
-    protected String      color;
-    protected List<Point> previousPositions;
+    protected IEcranGUI Ecran;
+    protected int    PosX;
+    protected int    PosY;
+    protected Direction direction;
+    protected int       Vitesse;
+    protected String    Color;
+    protected boolean   isRunning;
 
     public CLightCycle(IEcranGUI ecran, int posX, int posY,
                        Direction direction, int vitesse, String color) {
-        this.ecran = ecran;
+        this.Ecran = ecran;
         this.direction = direction;
-        this.posX = posX;
-        this.posY = posY;
-        this.vitesse = vitesse;
-        this.color = color;
-        this.previousPositions = new ArrayList<>();
+        this.PosX = posX;
+        this.PosY = posY;
+        this.Vitesse = vitesse;
+        this.Color = color;
+        this.isRunning = true;
         start();
     }
 
-    protected void display() {
-        ImageIcon Icon = new ImageIcon(color + ".jpg");
-        ecran.setIcon((int) posY, (int) posX, Icon);
-        Point p = new Point(this.posX, this.posY);
-        previousPositions.add(p);
+    @Override
+    public void run() {
+        super.run();
+
+        display();
+
+        while (isRunning) {
+            long startTime = System.currentTimeMillis();
+            long fps = 60;
+
+            move();
+            display();
+
+            long endTime = System.currentTimeMillis();
+
+            if (endTime < startTime + fps)
+                try {
+                    sleep((fps - (endTime - startTime)) / Vitesse);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        }
     }
+
+    protected void display() {
+        ImageIcon Icon = new ImageIcon(Color + ".jpg");
+        Ecran.setIcon(PosY, PosX, Icon);
+        Point p = new Point(this.PosX, this.PosY);
+        synchronized (CGame.usedCoord) {
+            CGame.usedCoord.add(p);
+        }
+    }
+
 
     protected void move() {
         switch (this.direction) {
             case UP: //HAUT
-                this.posY = posY - 1;
+                this.PosY = PosY - 1;
                 break;
             case DOWN: //BAS
-                this.posY = posY + 1;
+                this.PosY = PosY + 1;
                 break;
             case LEFT: //GAUCHE
-                this.posX = posX - 1;
+                this.PosX = PosX - 1;
                 break;
             case RIGHT: //DROITE
-                this.posX = posX + 1;
+                this.PosX = PosX + 1;
                 break;
         }
 
         collided();
     }
 
-    protected void collided() {
+    protected void kill() {
+        this.isRunning = false;
+    }
+
+    protected boolean collided() {
         //Collision avec les bords
         //Bord gauche
-        if (this.posX == 0)
-            this.ecran.gameOver();
+        if (this.PosX < 1) {
+            this.kill();
+            return true;
+        }
 
         //Bord droit
-        if (this.posX == this.ecran.getNbrColonnes())
-            System.out.println("Collision bord droit");
+        if (this.PosX == this.Ecran.getNbrColonnes()-1) {
+            this.kill();
+            return true;
+        }
 
         //Bord haut
-        if (this.posY == 0)
-            System.out.println("Collision bord haut");
+        if (this.PosY < 1) {
+            this.kill();
+            return true;
+        }
 
         //Bord bas
-        if (this.posY == this.ecran.getNbrLignes())
-            System.out.println("Collision bord bas");
+        if (this.PosY == this.Ecran.getNbrLignes()-1) {
+            this.kill();
+            return true;
+        }
 
-        //Collision avec le player et l'IA
-        for (Point p : previousPositions) {
-            //System.out.println("x :"+p.x+", y:"+p.y);
-            if (this.posX == p.x && this.posY == p.y) {
-                System.out.println("Collision");
-                //Stopper thread, le tuer, et recr�er l'�cran de jeu
-                try {
-                    sleep(2000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+		/*//Collision avec le player et l'IA
+		for(Point p : CGame.usedCoord){
+			//System.out.println("x :"+p.x+", y:"+p.y);
+			if(this.PosX == p.x && this.PosY == p.y){
+					this.kill();
+					return true;
+			}		
+		}*/
+
+        synchronized (CGame.usedCoord) {
+            for (Point p : CGame.usedCoord) {
+                //System.out.println("x :"+p.x+", y:"+p.y);
+                if (this.PosX == p.x && this.PosY == p.y) {
+                    this.kill();
+                    return true;
                 }
             }
-
         }
+
+        return false;
     }
 
 }
