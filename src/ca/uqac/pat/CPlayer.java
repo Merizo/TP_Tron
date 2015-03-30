@@ -12,7 +12,7 @@ public class CPlayer extends CLightCycle{
 
 		display();
 		
-		while (alive){
+		while (isRunning){
 			long startTime = System.currentTimeMillis();
 			long fps = 1000/10;
 					
@@ -24,13 +24,13 @@ public class CPlayer extends CLightCycle{
 			
 			if (endTime < startTime + fps)
 				try{
-					sleep ((fps - (endTime - startTime)) / vitesse);
+					sleep ((fps - (endTime - startTime)) / Vitesse);
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				}
 		}
 	}
 
-	public int getPosX() { return posX; }
-	public int getPosY() { return posY; }
+	public double getPosX() { return PosX; }
+	public double getPosY() { return PosY; }
 }

@@ -17,13 +17,13 @@ public class CGame {
 		this.isRunning = true;
 		
 		//Initialisation de la liste synchronized pour gérer les accès multiples
-		this.usedCoord = Collections.synchronizedList(new ArrayList<Point>());
+		usedCoord = Collections.synchronizedList(new ArrayList<>());
 	}
 	
 	public void play(){
 		int Largeur = 65;
 		int Hauteur = 65;
-		ImageIcon Im = new ImageIcon ("Black.gif");		
+		ImageIcon Im = new ImageIcon ("Black.jpg");
 		Ecran = new CEcranGUI (Hauteur, Largeur, Im);
 		while(isRunning){	
 			

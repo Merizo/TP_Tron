@@ -19,8 +19,8 @@ public class CBot extends CLightCycle {
 
     @Override
     public void run() {
-        super.run();
-        super.display();
+        // super.run();
+        // super.display();
 
         int moveLength = 0;
 
@@ -34,12 +34,14 @@ public class CBot extends CLightCycle {
                     setDirection(botDifficulty);
                 }
 
-                if (getAdjacentTileName(direction).equals("Black.jpg")) {
+                if (!isWall(direction)) {
                     move();
                     display();
 
                 }
+
                 moveLength--;
+
             } else {
                 setDirection(botDifficulty);
                 move();
@@ -58,63 +60,62 @@ public class CBot extends CLightCycle {
         }
 
         System.out.println("Dead");
-
     }
 
     private void setDirection(Difficulty opponentDifficulty) {
         JLabel[][] grid = Ecran.getGrille();
         switch (opponentDifficulty) {
             case RANDOM:
-                direction = getRandomDirection(grid);
+                direction = getRandomDirection();
                 break;
 
             case COWARD:
-                double value = Math.sqrt(Math.pow(2,Ecran.getPlayer().getPosY()-PosY)
-                        + Math.pow(2, Ecran.getPlayer().getPosX()-PosX));
+                double value = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
+                        + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
                 ArrayList<Direction> correctDirections = new ArrayList<>();
 
                 if (grid[PosY][PosX + 1].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2,Ecran.getPlayer().getPosY()-PosY)
-                            + Math.pow(2, Ecran.getPlayer().getPosX()-PosX+1));
+                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
+                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX + 1));
 
                     if (vector > value) {
 //                        value = vector;
-                        correctDirections.add (Direction.RIGHT);
+                        correctDirections.add(Direction.RIGHT);
                     }
                 }
 
                 if (grid[PosY][PosX - 1].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2,Ecran.getPlayer().getPosY()-PosY)
-                            + Math.pow(2, Ecran.getPlayer().getPosX()-PosX-1));
+                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
+                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX - 1));
 
                     if (vector > value) {
 //                        value = vector;
-                        correctDirections.add (Direction.LEFT);
+                        correctDirections.add(Direction.LEFT);
                     }
                 }
 
                 if (grid[PosY + 1][PosX].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2,Ecran.getPlayer().getPosY()-PosY+1)
-                            + Math.pow(2, Ecran.getPlayer().getPosX()-PosX));
+                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY + 1)
+                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
 
                     if (vector > value) {
 //                        value = vector;
-                        correctDirections.add (Direction.DOWN);
+                        correctDirections.add(Direction.DOWN);
                     }
                 }
 
                 if (grid[PosY - 1][PosX].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2,Ecran.getPlayer().getPosY()-PosY-1)
-                            + Math.pow(2, Ecran.getPlayer().getPosX()-PosX));
+                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY - 1)
+                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
 
                     if (vector > value) {
-                        correctDirections.add (Direction.UP);
+                        correctDirections.add(Direction.UP);
                     }
                 }
 
                 if (correctDirections.size() == 0) {
                     isRunning = false;
-                    getRandomDirection(grid);
+                    getRandomDirection();
                 } else {
                     Random randomDirection = new Random();
                     int newDirection = randomDirection.nextInt(correctDirections.size());
@@ -128,19 +129,19 @@ public class CBot extends CLightCycle {
         }
     }
 
-    private Direction getRandomDirection(JLabel[][] grid) {
+    private Direction getRandomDirection() {
         ArrayList<Direction> correctDirections = new ArrayList<>();
         // Get coprrect surrounding positions
-        if (getAdjacentTileName(Direction.RIGHT).equals("Black.jpg"))
+        if (!isWall(Direction.RIGHT) && PosX < Ecran.getNbrColonnes()-1)
             correctDirections.add(Direction.RIGHT);
 
-        if (getAdjacentTileName(Direction.LEFT).equals("Black.jpg"))
+        if (!isWall(Direction.LEFT) && PosX > 0)
             correctDirections.add(Direction.LEFT);
 
-        if (getAdjacentTileName(Direction.DOWN).equals("Black.jpg"))
+        if (!isWall(Direction.DOWN) && PosY < Ecran.getNbrLignes()-1)
             correctDirections.add(Direction.DOWN);
 
-        if (getAdjacentTileName(Direction.UP).equals("Black.jpg"))
+        if (!isWall(Direction.UP) && PosY > 0)
             correctDirections.add(Direction.UP);
 
         if (correctDirections.size() == 0) {
@@ -151,6 +152,13 @@ public class CBot extends CLightCycle {
             int newDirection = randomDirection.nextInt(correctDirections.size());
             return correctDirections.get(newDirection);
         }
+    }
+
+    private boolean isWall(Direction dir) {
+        if (!getAdjacentTileName(dir).equals("Black.jpg"))
+            return true;
+        else
+            return false;
     }
 
     private String getAdjacentTileName(Direction dir) {
