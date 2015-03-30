@@ -6,22 +6,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
     public final JFrame Fen;
 
-    private final int        NbrLignes;
-    private final int        NbrColonnes;
-    private final JLabel[][] Grille;
-    private final CPlayer    player;
-    private       boolean    gameOver;
-
-
-//    public CEcranGUI() {
-//        this(50, 10, 80, 10, 12, null);
-//        Fen.addKeyListener(this);
-//    }
+    private final int                    NbrLignes;
+    private final int                    NbrColonnes;
+    private final JLabel[][]             Grille;
+    private       ArrayList<CLightCycle> LightCycles;
+    private boolean gameOver;
 
 
     public CEcranGUI(int nbrLignes, int hauteur, ImageIcon fond) {
@@ -29,11 +24,6 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
         Fen.addKeyListener(this);
 
     }
-
-
-//	public CEcranGUI(int nbrLignes, int hauteur, int size){
-//		this(nbrLignes, 10, hauteur, 10, size, null);
-//	}
 
     /**
      * Le constructeur complet.
@@ -45,8 +35,6 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
 
         setLayout(new GridLayout(NbrLignes, NbrColonnes, 0, 0));
-
-
         Grille = new JLabel[NbrLignes][NbrColonnes];
 
 
@@ -69,9 +57,11 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
         drawWalls();
 
-        player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 0, "White");
-        CBot randomBot = new CBot(this, 50, 50, CLightCycle.Direction.LEFT, 1, "Green", CBot.Difficulty.RANDOM);
-        CBot cowardBot = new CBot(this, 10, 50, CLightCycle.Direction.UP, 1, "Purple", CBot.Difficulty.COWARD);
+        LightCycles = new ArrayList<>();
+        LightCycles.add(new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 1, "White"));
+        LightCycles.add(new CBot(this, 50, 50, CLightCycle.Direction.LEFT, 1, "Green", CBot.Difficulty.RANDOM));
+        LightCycles.add(new CBot(this, 10, 50, CLightCycle.Direction.UP, 1, "Purple", CBot.Difficulty.COWARD));
+        LightCycles.add(new CBot(this, 80, 10, CLightCycle.Direction.DOWN, 1, "Orange", CBot.Difficulty.CHASER));
     }
 
     public void gameOver() {
@@ -111,23 +101,27 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DOWN:
                 //Si la direction n'est pas déjà haut ou bas
-                if (player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
-                    player.direction = CLightCycle.Direction.DOWN;
+                if (LightCycles.get(0).direction != CLightCycle.Direction.UP
+                        && LightCycles.get(0).direction != CLightCycle.Direction.DOWN)
+                    LightCycles.get(0).direction = CLightCycle.Direction.DOWN;
                 break;
             case KeyEvent.VK_LEFT:
 
-                if (player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
-                    player.direction = CLightCycle.Direction.LEFT;
+                if (LightCycles.get(0).direction != CLightCycle.Direction.RIGHT
+                        && LightCycles.get(0).direction != CLightCycle.Direction.LEFT)
+                    LightCycles.get(0).direction = CLightCycle.Direction.LEFT;
                 break;
             case KeyEvent.VK_RIGHT:
 
-                if (player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
-                    player.direction = CLightCycle.Direction.RIGHT;
+                if (LightCycles.get(0).direction != CLightCycle.Direction.RIGHT
+                        && LightCycles.get(0).direction != CLightCycle.Direction.LEFT)
+                    LightCycles.get(0).direction = CLightCycle.Direction.RIGHT;
                 break;
             case KeyEvent.VK_UP:
 
-                if (player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
-                    player.direction = CLightCycle.Direction.UP;
+                if (LightCycles.get(0).direction != CLightCycle.Direction.UP
+                        && LightCycles.get(0).direction != CLightCycle.Direction.DOWN)
+                    LightCycles.get(0).direction = CLightCycle.Direction.UP;
                 break;
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
@@ -161,21 +155,21 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
     }
 
     public CPlayer getPlayer() {
-        return player;
+        return (CPlayer)LightCycles.get(0);
     }
 
     private void drawWalls() {
         for (int i = 0; i < getNbrLignes(); i++) {
-            Grille[i][0].setIcon(new ImageIcon("Grey.jpg"));
-            Grille[i][getNbrColonnes() - 1].setIcon(new ImageIcon("Grey.jpg"));
+            Grille[i][0].setIcon(new ImageIcon("Wall.jpg"));
+            Grille[i][getNbrColonnes() - 1].setIcon(new ImageIcon("Wall.jpg"));
 
             CGame.usedCoord.add(new Point(0, i));
             CGame.usedCoord.add(new Point(getNbrColonnes() - 1, i));
         }
 
         for (int j = 0; j < getNbrColonnes(); j++) {
-            Grille[0][j].setIcon(new ImageIcon("Grey.jpg"));
-            Grille[getNbrLignes() - 1][j].setIcon(new ImageIcon("Grey.jpg"));
+            Grille[0][j].setIcon(new ImageIcon("Wall.jpg"));
+            Grille[getNbrLignes() - 1][j].setIcon(new ImageIcon("Wall.jpg"));
 
             CGame.usedCoord.add(new Point(j, 0));
             CGame.usedCoord.add(new Point(j, getNbrLignes()));

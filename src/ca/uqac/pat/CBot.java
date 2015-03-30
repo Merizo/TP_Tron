@@ -1,6 +1,5 @@
 package ca.uqac.pat;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CBot extends CLightCycle {
@@ -20,10 +19,6 @@ public class CBot extends CLightCycle {
 
     @Override
     public void run() {
-        // super.run();
-        // super.display();
-
-
         while (isRunning) {
             long startTime = System.currentTimeMillis();
             long fps = 1000 / 10;
@@ -66,26 +61,25 @@ public class CBot extends CLightCycle {
     }
 
     private void setDirection(Difficulty opponentDifficulty) {
+        int    diffX             = PosX - Ecran.getPlayer().getPosX();
+        int    diffY             = PosY - Ecran.getPlayer().getPosY();
+        double currentVectorNorm = getVectorLength(diffX, diffY);
+
         switch (opponentDifficulty) {
             case RANDOM:    // Deplacement totalement aleatoire
                 direction = getRandomDirection();
                 break;
 
             case COWARD:    // S'eloigne du joueur
-                double base = 10.0E-324D;
-                int diffX = PosX - Ecran.getPlayer().getPosX();
-                int diffY = PosY - Ecran.getPlayer().getPosY();
-                double currentVectorNorm = Math.sqrt((double) (diffX * diffX) + diffY * diffY);
-
-                if (currentVectorNorm < 20) {
+                if (currentVectorNorm < 15) {
 
                     if (!isWall(Direction.UP)) {
                         diffX = PosX - Ecran.getPlayer().getPosX();
                         diffY = PosY - 1 - Ecran.getPlayer().getPosY();
-                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
+                        double vectorLength = getVectorLength(diffX, diffY);
 
-                        if (vectorLength > base) {
-                            base = vectorLength;
+                        if (vectorLength > currentVectorNorm) {
+                            currentVectorNorm = vectorLength;
                             direction = Direction.UP;
                         }
                     }
@@ -93,10 +87,10 @@ public class CBot extends CLightCycle {
                     if (!isWall(Direction.DOWN)) {
                         diffX = PosX - Ecran.getPlayer().getPosX();
                         diffY = PosY + 1 - Ecran.getPlayer().getPosY();
-                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
+                        double vectorLength = getVectorLength(diffX, diffY);
 
-                        if (vectorLength > base) {
-                            base = vectorLength;
+                        if (vectorLength > currentVectorNorm) {
+                            currentVectorNorm = vectorLength;
                             direction = Direction.DOWN;
                         }
                     }
@@ -104,10 +98,9 @@ public class CBot extends CLightCycle {
                     if (!isWall(Direction.RIGHT)) {
                         diffX = PosX + 1 - Ecran.getPlayer().getPosX();
                         diffY = PosY - Ecran.getPlayer().getPosY();
-                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
+                        double vectorLength = getVectorLength(diffX, diffY);
 
-                        if (vectorLength > base) {
-                            base = vectorLength;
+                        if (vectorLength > currentVectorNorm) {
                             direction = Direction.RIGHT;
                         }
                     }
@@ -115,9 +108,9 @@ public class CBot extends CLightCycle {
                     if (!isWall(Direction.LEFT)) {
                         diffX = PosX - 1 - Ecran.getPlayer().getPosX();
                         diffY = PosY - Ecran.getPlayer().getPosY();
-                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
+                        double vectorLength = getVectorLength(diffX, diffY);
 
-                        if (vectorLength > base) {
+                        if (vectorLength > currentVectorNorm) {
                             direction = Direction.LEFT;
                         }
                     }
@@ -128,50 +121,57 @@ public class CBot extends CLightCycle {
                 break;
 
             case CHASER:
+                if (currentVectorNorm < 30) {
+                    if (!isWall(Direction.UP)) {
+                        diffX = PosX - Ecran.getPlayer().getPosX();
+                        diffY = PosY - 1 - Ecran.getPlayer().getPosY();
+                        double vectorLength = getVectorLength(diffX, diffY);
+
+                        if (vectorLength < currentVectorNorm) {
+                            currentVectorNorm = vectorLength;
+                            direction = Direction.UP;
+                        }
+                    }
+
+                    if (!isWall(Direction.DOWN)) {
+                        diffX = PosX - Ecran.getPlayer().getPosX();
+                        diffY = PosY + 1 - Ecran.getPlayer().getPosY();
+                        double vectorLength = getVectorLength(diffX, diffY);
+
+                        if (vectorLength < currentVectorNorm) {
+                            currentVectorNorm = vectorLength;
+                            direction = Direction.DOWN;
+                        }
+                    }
+
+                    if (!isWall(Direction.RIGHT)) {
+                        diffX = PosX + 1 - Ecran.getPlayer().getPosX();
+                        diffY = PosY - Ecran.getPlayer().getPosY();
+                        double vectorLength = getVectorLength(diffX, diffY);
+
+                        if (vectorLength < currentVectorNorm) {
+                            direction = Direction.RIGHT;
+                        }
+                    }
+
+                    if (!isWall(Direction.LEFT)) {
+                        diffX = PosX - 1 - Ecran.getPlayer().getPosX();
+                        diffY = PosY - Ecran.getPlayer().getPosY();
+                        double vectorLength = getVectorLength(diffX, diffY);
+
+                        if (vectorLength < currentVectorNorm) {
+                            direction = Direction.LEFT;
+                        }
+                    }
+                } else {
+                    direction = getRandomDirection();
+                    moveLength = rnd.nextInt(16) + 10;
+                }
                 break;
         }
     }
 
-    private Direction getRandomDirection() {
-        ArrayList<Direction> correctDirections = new ArrayList<>();
-        // Get coprrect surrounding positions
-        if (!isWall(Direction.RIGHT) && PosX < Ecran.getNbrColonnes() - 1)
-            correctDirections.add(Direction.RIGHT);
-
-        if (!isWall(Direction.LEFT) && PosX > 0)
-            correctDirections.add(Direction.LEFT);
-
-        if (!isWall(Direction.DOWN) && PosY < Ecran.getNbrLignes() - 1)
-            correctDirections.add(Direction.DOWN);
-
-        if (!isWall(Direction.UP) && PosY > 0)
-            correctDirections.add(Direction.UP);
-
-        if (correctDirections.size() == 0) {
-            isRunning = false;
-            return Direction.UP;
-        } else {
-            Random randomDirection = new Random();
-            int newDirection = randomDirection.nextInt(correctDirections.size());
-            return correctDirections.get(newDirection);
-        }
-    }
-
-    private boolean isWall(Direction dir) {
-        return !getAdjacentTileName(dir).equals("Black.jpg");
-    }
-
-    private String getAdjacentTileName(Direction dir) {
-        if (dir == Direction.UP)
-            return Ecran.getGrille()[PosY - 1][PosX].getIcon().toString();
-
-        else if (dir == Direction.DOWN)
-            return Ecran.getGrille()[PosY + 1][PosX].getIcon().toString();
-
-        else if (dir == Direction.LEFT)
-            return Ecran.getGrille()[PosY][PosX - 1].getIcon().toString();
-
-        else // if (dir == Direction.RIGHT)
-            return Ecran.getGrille()[PosY][PosX + 1].getIcon().toString();
+    double getVectorLength(int diffX, int diffY) {
+        return Math.sqrt((double) (diffX * diffX + diffY * diffY));
     }
 }

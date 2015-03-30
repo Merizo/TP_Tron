@@ -1,6 +1,8 @@
 package ca.uqac.pat;
 
 import javax.swing.ImageIcon;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class CLightCycle extends Thread {
     public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -108,15 +110,6 @@ public class CLightCycle extends Thread {
             return true;
         }
 
-		/*//Collision avec le player et l'IA
-        for(Point p : CGame.usedCoord){
-			//System.out.println("x :"+p.x+", y:"+p.y);
-			if(this.PosX == p.x && this.PosY == p.y){
-					this.kill();
-					return true;
-			}		
-		}*/
-
         synchronized (CGame.usedCoord) {
             for (Point p : CGame.usedCoord) {
                 //System.out.println("x :"+p.x+", y:"+p.y);
@@ -128,6 +121,49 @@ public class CLightCycle extends Thread {
         }
 
         return false;
+    }
+
+    protected Direction getRandomDirection() {
+        ArrayList<Direction> correctDirections = new ArrayList<>();
+        // Get correct surrounding positions
+        if (!isWall(Direction.RIGHT) && PosX < Ecran.getNbrColonnes() - 1)
+            correctDirections.add(Direction.RIGHT);
+
+        if (!isWall(Direction.LEFT) && PosX > 0)
+            correctDirections.add(Direction.LEFT);
+
+        if (!isWall(Direction.DOWN) && PosY < Ecran.getNbrLignes() - 1)
+            correctDirections.add(Direction.DOWN);
+
+        if (!isWall(Direction.UP) && PosY > 0)
+            correctDirections.add(Direction.UP);
+
+        if (correctDirections.size() == 0) {
+            isRunning = false;
+            return Direction.UP;
+        } else {
+            Random randomDirection = new Random();
+            int newDirection = randomDirection.nextInt(correctDirections.size());
+            return correctDirections.get(newDirection);
+        }
+    }
+
+    protected boolean isWall(Direction dir) {
+        return !getAdjacentTileName(dir).equals("Black.jpg");
+    }
+
+    protected String getAdjacentTileName(Direction dir) {
+        if (dir == Direction.UP)
+            return Ecran.getGrille()[PosY - 1][PosX].getIcon().toString();
+
+        else if (dir == Direction.DOWN)
+            return Ecran.getGrille()[PosY + 1][PosX].getIcon().toString();
+
+        else if (dir == Direction.LEFT)
+            return Ecran.getGrille()[PosY][PosX - 1].getIcon().toString();
+
+        else // if (dir == Direction.RIGHT)
+            return Ecran.getGrille()[PosY][PosX + 1].getIcon().toString();
     }
 
 }
