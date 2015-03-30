@@ -120,7 +120,7 @@ public class CBot extends CLightCycle {
                 }
                 break;
 
-            case CHASER:
+            case CHASER:    // Se rapproche du joueur
                 if (currentVectorNorm < 30) {
                     if (!isWall(Direction.UP)) {
                         diffX = PosX - Ecran.getPlayer().getPosX();

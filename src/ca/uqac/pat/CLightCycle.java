@@ -52,7 +52,7 @@ public class CLightCycle extends Thread {
     }
 
     protected void display() {
-        ImageIcon Icon = new ImageIcon(Color + ".jpg");
+        ImageIcon Icon = new ImageIcon("res/"+ Color + ".jpg");
         Ecran.setIcon(PosY, PosX, Icon);
         Point p = new Point(this.PosX, this.PosY);
         synchronized (CGame.usedCoord) {
@@ -149,7 +149,7 @@ public class CLightCycle extends Thread {
     }
 
     protected boolean isWall(Direction dir) {
-        return !getAdjacentTileName(dir).equals("Black.jpg");
+        return !getAdjacentTileName(dir).equals("res/Black.jpg");
     }
 
     protected String getAdjacentTileName(Direction dir) {

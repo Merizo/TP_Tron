@@ -26,12 +26,12 @@ public class CGame {
     public void play() {
         new JFXPanel();
 
-        bgmusic = new Media(Paths.get("bgmusic.mp3").toUri().toString());
+        bgmusic = new Media(Paths.get("res/bgmusic.mp3").toUri().toString());
         mediaPlayer = new MediaPlayer(bgmusic);
 
         int       Largeur = 100;
         int       Hauteur = 80;
-        ImageIcon Im      = new ImageIcon("Black.jpg");
+        ImageIcon Im      = new ImageIcon("res/Black.jpg");
         CEcranGUI ecran   = new CEcranGUI(Hauteur, Largeur, Im);
 
         mediaPlayer.play();

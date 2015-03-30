@@ -160,16 +160,16 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
     private void drawWalls() {
         for (int i = 0; i < getNbrLignes(); i++) {
-            Grille[i][0].setIcon(new ImageIcon("Wall.jpg"));
-            Grille[i][getNbrColonnes() - 1].setIcon(new ImageIcon("Wall.jpg"));
+            Grille[i][0].setIcon(new ImageIcon("res/Wall.jpg"));
+            Grille[i][getNbrColonnes() - 1].setIcon(new ImageIcon("res/Wall.jpg"));
 
             CGame.usedCoord.add(new Point(0, i));
             CGame.usedCoord.add(new Point(getNbrColonnes() - 1, i));
         }
 
         for (int j = 0; j < getNbrColonnes(); j++) {
-            Grille[0][j].setIcon(new ImageIcon("Wall.jpg"));
-            Grille[getNbrLignes() - 1][j].setIcon(new ImageIcon("Wall.jpg"));
+            Grille[0][j].setIcon(new ImageIcon("res/Wall.jpg"));
+            Grille[getNbrLignes() - 1][j].setIcon(new ImageIcon("res/Wall.jpg"));
 
             CGame.usedCoord.add(new Point(j, 0));
             CGame.usedCoord.add(new Point(j, getNbrLignes()));
