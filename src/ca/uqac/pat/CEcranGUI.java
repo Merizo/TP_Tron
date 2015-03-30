@@ -7,13 +7,12 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	private static final long serialVersionUID = 1L;
 
-	public final JFrame 	Fen;		// La fen�tre d'interface
+	public final  JFrame           Fen;        // La fenetre d'interface
 
 	private int 			NbrLignes;
 	private int 			NbrColonnes;
@@ -25,31 +24,21 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 
 
 	public CEcranGUI(){
-		this (50, 10, 80, 10, 12, null);
-		Fen.addKeyListener(this);
-		player = new CPlayer(this, 12, 20, 4, 1, "White");
-	}
-
-
-	public CEcranGUI(int nbrLignes, int hauteur){
-		this (nbrLignes, 10, hauteur, 10, 12, null);
+		this(50, 10, 80, 10, 12, null);
 		Fen.addKeyListener(this);
 	}
 
 
 	public CEcranGUI(int nbrLignes, int hauteur, ImageIcon fond){
-		this (nbrLignes, 10, hauteur, 10, 8, fond);
+		this(nbrLignes, 10, hauteur, 10, 8, fond);
 		Fen.addKeyListener(this);
-		player = new CPlayer(this, 12, 20, 4, 1, "White");
-		CLightCycle ForceOrange= new CLightCycle(this, 50, 30, 2, 1, "Orange");
-		CLightCycle ForceVerte= new CLightCycle(this, 65, 50, 3, 1, "Green");
-		this.gameOver=false;
+		
 	}
 
 
-	public CEcranGUI(int nbrLignes, int hauteur, int size){
-		this (nbrLignes, 10, hauteur, 10, size, null);
-	}
+//	public CEcranGUI(int nbrLignes, int hauteur, int size){
+//		this(nbrLignes, 10, hauteur, 10, size, null);
+//	}
 
 	/** Le constructeur complet. */
 	public CEcranGUI(	int nbrLignes, 		int hauteur, 
@@ -57,6 +46,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 						int sizeText, 		ImageIcon fond) {
 		NbrLignes 		= nbrLignes;
 		NbrColonnes		= nbrColonnes;
+		
 		
 		setLayout (new GridLayout(NbrLignes, NbrColonnes, 0 ,0));
 
@@ -77,8 +67,18 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 				Grille[y][x].setBorder(BorderFactory.createEmptyBorder());
 			}
 		Fen = new CFrameEcran (this, NbrColonnes*largeur, NbrLignes*hauteur);
+
+		player = new CPlayer(this, 12, 20, player.Direction.RIGHT, 1, "White");
+		//CLightCycle ForceOrange= new CLightCycle(this, 50, 30, forceOrange.Direction.DOWN, 1, "Orange");
+		//CLightCycle ForcePurple= new CLightCycle(this, 12, 75, 1, 1, "Purple");
+		//CLightCycle ForceGreen= new CLightCycle(this, 65, 50, ForceGreen.Direction.LEFT, 1, "Green");
 		Fen.setTitle("Lab 3 : Tr0n game");
 		CGame.usedCoord.clear();
+
+		drawWalls();
+
+		COpponent forceJaune = new COpponent(this, 50, 50, CLightCycle.Direction.LEFT, 1, "Yellow", COpponent.Difficulty.COWARD);
+
 	}
 
 	public void gameOver(){
@@ -131,20 +131,23 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
         {
         case KeyEvent.VK_DOWN :
             //Si la direction n'est pas déjà haut ou bas
-        	if(player.Direction != 1 && player.Direction != 2)
-        		player.Direction=1;
+        	if(player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
+        		player.direction = CLightCycle.Direction.DOWN;
             break;
         case KeyEvent.VK_LEFT :
-        	if(player.Direction != 3 && player.Direction != 4)
-        		player.Direction=3;
+        	
+        	if(player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
+        		player.direction = CLightCycle.Direction.LEFT;
             break;
         case KeyEvent.VK_RIGHT :
-        	if(player.Direction != 3 && player.Direction != 4)
-        		player.Direction=4;
+        	
+			if(player.direction != CLightCycle.Direction.RIGHT && player.direction != CLightCycle.Direction.LEFT)
+        		player.direction = CLightCycle.Direction.RIGHT;
             break;
         case KeyEvent.VK_UP :
-        	if(player.Direction != 1 && player.Direction != 2)
-        		player.Direction=2;
+        	
+			if(player.direction != CLightCycle.Direction.UP && player.direction != CLightCycle.Direction.DOWN)
+        		player.direction = CLightCycle.Direction.UP;
             break;
         case KeyEvent.VK_ESCAPE :
         	System.exit(0);
@@ -156,15 +159,13 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	public int getNbrLignes() {
@@ -173,6 +174,22 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener{
 	
 	public int getNbrColonnes() {
 		return NbrColonnes;
+	}
+
+	public JLabel[][] getGrille() { return Grille;}
+
+	public CPlayer getPlayer() { return player; }
+
+	private void drawWalls() {
+		for (int i = 0; i < getNbrLignes(); i++) {
+			Grille[i][0].setIcon(new ImageIcon ("Grey.jpg"));
+			Grille[i][getNbrColonnes()-1].setIcon(new ImageIcon ("Grey.jpg"));
+		}
+
+		for (int j = 0 ; j < getNbrColonnes() ; j++) {
+			Grille[0][j].setIcon(new ImageIcon ("Grey.jpg"));
+			Grille[getNbrLignes()-1][j].setIcon(new ImageIcon ("Grey.jpg"));
+		}
 	}
 }
 
