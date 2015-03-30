@@ -2,21 +2,16 @@ package ca.uqac.pat;
 
 import javax.swing.ImageIcon;
 
-
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
-
 public class CLightCycle extends Thread {
     public enum Direction {UP, DOWN, LEFT, RIGHT}
 
-    protected IEcranGUI Ecran;
-    protected int    PosX;
-    protected int    PosY;
-    protected Direction direction;
-    protected int       Vitesse;
-    protected String    Color;
-    protected boolean   isRunning;
+    protected final IEcranGUI Ecran;
+    protected       int       PosX;
+    protected       int       PosY;
+    protected       Direction direction;
+    protected final int       Vitesse;
+    private final   String    Color;
+    protected       boolean   isRunning;
 
     public CLightCycle(IEcranGUI ecran, int posX, int posY,
                        Direction direction, int vitesse, String color) {
@@ -83,7 +78,7 @@ public class CLightCycle extends Thread {
         collided();
     }
 
-    protected void kill() {
+    private void kill() {
         this.isRunning = false;
     }
 
@@ -96,7 +91,7 @@ public class CLightCycle extends Thread {
         }
 
         //Bord droit
-        if (this.PosX == this.Ecran.getNbrColonnes()-1) {
+        if (this.PosX == this.Ecran.getNbrColonnes() - 1) {
             this.kill();
             return true;
         }
@@ -108,13 +103,13 @@ public class CLightCycle extends Thread {
         }
 
         //Bord bas
-        if (this.PosY == this.Ecran.getNbrLignes()-1) {
+        if (this.PosY == this.Ecran.getNbrLignes() - 1) {
             this.kill();
             return true;
         }
 
 		/*//Collision avec le player et l'IA
-		for(Point p : CGame.usedCoord){
+        for(Point p : CGame.usedCoord){
 			//System.out.println("x :"+p.x+", y:"+p.y);
 			if(this.PosX == p.x && this.PosY == p.y){
 					this.kill();
@@ -125,7 +120,7 @@ public class CLightCycle extends Thread {
         synchronized (CGame.usedCoord) {
             for (Point p : CGame.usedCoord) {
                 //System.out.println("x :"+p.x+", y:"+p.y);
-                if (this.PosX == p.x && this.PosY == p.y) {
+                if (this.PosX == p.getX() && this.PosY == p.getY()) {
                     this.kill();
                     return true;
                 }

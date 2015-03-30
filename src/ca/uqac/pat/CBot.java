@@ -1,15 +1,14 @@
 package ca.uqac.pat;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class CBot extends CLightCycle {
     public enum Difficulty {RANDOM, COWARD, CHASER}
 
-    Difficulty botDifficulty;
-    Random     rnd;
-    int        moveLength;
+    private final Difficulty botDifficulty;
+    private final Random     rnd;
+    private       int        moveLength;
 
     public CBot(CEcranGUI ecran, int posX, int posY, Direction direction, int vitesse, String color, Difficulty difficulty) {
         super(ecran, posX, posY, direction, vitesse, color);
@@ -46,8 +45,7 @@ public class CBot extends CLightCycle {
                     move();
                     display();
                     moveLength--;
-                }
-                else moveLength = -1;
+                } else moveLength = -1;
             } else {
                 setDirection(botDifficulty);
                 move();
@@ -68,7 +66,6 @@ public class CBot extends CLightCycle {
     }
 
     private void setDirection(Difficulty opponentDifficulty) {
-        JLabel[][] grid = Ecran.getGrille();
         switch (opponentDifficulty) {
             case RANDOM:    // Deplacement totalement aleatoire
                 direction = getRandomDirection();
@@ -76,7 +73,6 @@ public class CBot extends CLightCycle {
 
             case COWARD:    // S'eloigne du joueur
                 double base = 10.0E-324D;
-                ArrayList<Direction> correctDirections = new ArrayList<>();
                 int diffX = PosX - Ecran.getPlayer().getPosX();
                 int diffY = PosY - Ecran.getPlayer().getPosY();
                 double currentVectorNorm = Math.sqrt((double) (diffX * diffX) + diffY * diffY);
@@ -122,7 +118,6 @@ public class CBot extends CLightCycle {
                         double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
 
                         if (vectorLength > base) {
-                            base = vectorLength;
                             direction = Direction.LEFT;
                         }
                     }
@@ -130,15 +125,6 @@ public class CBot extends CLightCycle {
                     direction = getRandomDirection();
                     moveLength = rnd.nextInt(16) + 10;
                 }
-
-//                if (correctDirections.size() == 0) {
-//                    isRunning = false;
-//                    getRandomDirection();
-//                } else {
-//                    Random randomDirection = new Random();
-//                    int newDirection = randomDirection.nextInt(correctDirections.size());
-//                    direction = correctDirections.get(newDirection);
-//                }
                 break;
 
             case CHASER:
@@ -172,10 +158,7 @@ public class CBot extends CLightCycle {
     }
 
     private boolean isWall(Direction dir) {
-        if (!getAdjacentTileName(dir).equals("Black.jpg"))
-            return true;
-        else
-            return false;
+        return !getAdjacentTileName(dir).equals("Black.jpg");
     }
 
     private String getAdjacentTileName(Direction dir) {

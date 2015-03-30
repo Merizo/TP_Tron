@@ -7,14 +7,10 @@ import java.awt.event.WindowEvent;
 
 
 public class CFrameEcran extends JFrame{
-	private static final long serialVersionUID = 1L;
-	private JComponent Centre;
-	
-	public CFrameEcran(JComponent centre, int Lar, int Hau) {
+	public CFrameEcran(JComponent centre) {
 		super ("Power ANSI REPLACER");
-		Centre 	= centre;
-		
-		setContentPane(Centre);
+
+		setContentPane(centre);
 		
 		pack();
 		setVisible (true);

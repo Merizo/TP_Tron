@@ -9,15 +9,13 @@ import java.awt.event.KeyListener;
 
 
 public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
-    private static final long serialVersionUID = 1L;
-
     public final JFrame Fen;
 
-    private int         NbrLignes;
-    private int         NbrColonnes;
-    private JLabel[][]  Grille;
-    private CPlayer     player;
-    private boolean     gameOver;
+    private final int        NbrLignes;
+    private final int        NbrColonnes;
+    private final JLabel[][] Grille;
+    private final CPlayer    player;
+    private       boolean    gameOver;
 
 
 //    public CEcranGUI() {
@@ -27,7 +25,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
 
     public CEcranGUI(int nbrLignes, int hauteur, ImageIcon fond) {
-        this(nbrLignes, 10, hauteur, 10, 8, fond);
+        this(nbrLignes, 10, hauteur, 10, fond);
         Fen.addKeyListener(this);
 
     }
@@ -40,9 +38,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
     /**
      * Le constructeur complet.
      */
-    public CEcranGUI(int nbrLignes, int hauteur,
-                     int nbrColonnes, int largeur,
-                     int sizeText, ImageIcon fond) {
+    private CEcranGUI(int nbrLignes, int hauteur,
+                      int nbrColonnes, int largeur, ImageIcon fond) {
         NbrLignes = nbrLignes;
         NbrColonnes = nbrColonnes;
 
@@ -55,7 +52,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
         JLabel Bareme = new JLabel("Bareme");
         Font petit = new Font(Bareme.getFont().getName(),
-                Bareme.getFont().getStyle(), sizeText);
+                Bareme.getFont().getStyle(), 8);
         for (int y = 0; y < Grille.length; y++)
             for (int x = 0; x < Grille[y].length; x++) {
                 Grille[y][x] = new JLabel(fond);
@@ -64,7 +61,7 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
                 Grille[y][x].setFont(petit);
                 Grille[y][x].setBorder(BorderFactory.createEmptyBorder());
             }
-        Fen = new CFrameEcran(this, NbrColonnes * largeur, NbrLignes * hauteur);
+        Fen = new CFrameEcran(this);
 
 
         Fen.setTitle("Lab 3 : Tr0n game");
@@ -73,7 +70,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
         drawWalls();
 
         player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 0, "White");
-        CBot randomBot = new CBot(this, 50, 50, CLightCycle.Direction.UP, 1, "Green", CBot.Difficulty.COWARD);
+        CBot randomBot = new CBot(this, 50, 50, CLightCycle.Direction.LEFT, 1, "Green", CBot.Difficulty.RANDOM);
+        CBot cowardBot = new CBot(this, 10, 50, CLightCycle.Direction.UP, 1, "Purple", CBot.Difficulty.COWARD);
     }
 
     public void gameOver() {
@@ -107,14 +105,6 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
         return true;
     }
 
-
-    public boolean setText(int Lig, int Col, String txt) {
-        if (Lig >= Grille.length) return false;
-        if (Col >= Grille[Lig].length) return false;
-
-        Grille[Lig][Col].setText(txt);
-        return true;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {
