@@ -21,11 +21,11 @@ public class CGame {
 	}
 	
 	public void play(){
-		int Largeur = 65;
-		int Hauteur = 65;
+		int Largeur = 80;
+		int Hauteur = 80;
 		ImageIcon Im = new ImageIcon ("Black.jpg");
 		Ecran = new CEcranGUI (Hauteur, Largeur, Im);
-		while(isRunning){	
+		while(isRunning){
 			
 			//SI l'utilisateur veut rejouer
 			if(this.Ecran.getGameOver() == true){

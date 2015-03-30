@@ -72,8 +72,8 @@ public class CEcranGUI extends JComponent implements IEcranGUI, KeyListener {
 
         drawWalls();
 
-        player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 1, "White");
-        CBot randomBot = new CBot(this, 50, 50, CLightCycle.Direction.UP, 1, "Green", CBot.Difficulty.RANDOM);
+        player = new CPlayer(this, 12, 20, CLightCycle.Direction.RIGHT, 0, "White");
+        CBot randomBot = new CBot(this, 50, 50, CLightCycle.Direction.UP, 1, "Green", CBot.Difficulty.COWARD);
     }
 
     public void gameOver() {

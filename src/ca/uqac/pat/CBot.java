@@ -8,13 +8,15 @@ public class CBot extends CLightCycle {
     public enum Difficulty {RANDOM, COWARD, CHASER}
 
     Difficulty botDifficulty;
-    Random rnd = new Random();
-
+    Random     rnd;
+    int        moveLength;
 
     public CBot(CEcranGUI ecran, int posX, int posY, Direction direction, int vitesse, String color, Difficulty difficulty) {
         super(ecran, posX, posY, direction, vitesse, color);
 
         botDifficulty = difficulty;
+        rnd = new Random();
+        moveLength = 0;
     }
 
     @Override
@@ -22,32 +24,35 @@ public class CBot extends CLightCycle {
         // super.run();
         // super.display();
 
-        int moveLength = 0;
 
         while (isRunning) {
             long startTime = System.currentTimeMillis();
             long fps = 1000 / 10;
 
-            if (botDifficulty == Difficulty.RANDOM) {
-                if (moveLength == 0) {
-                    moveLength = rnd.nextInt(10);
-                    setDirection(botDifficulty);
+            if (moveLength > 0) {
+                if (isWall(direction)) {
+                    direction = getRandomDirection();
                 }
 
-                if (!isWall(direction)) {
-                    move();
-                    display();
-
-                }
-
+                move();
+                display();
                 moveLength--;
 
+            } else if (moveLength == 0) {
+                if (botDifficulty == Difficulty.RANDOM) {
+                    moveLength = rnd.nextInt(16) + 10;
+
+                    direction = getRandomDirection();
+                    move();
+                    display();
+                    moveLength--;
+                }
+                else moveLength = -1;
             } else {
                 setDirection(botDifficulty);
                 move();
                 display();
             }
-
 
             long endTime = System.currentTimeMillis();
 
@@ -65,63 +70,75 @@ public class CBot extends CLightCycle {
     private void setDirection(Difficulty opponentDifficulty) {
         JLabel[][] grid = Ecran.getGrille();
         switch (opponentDifficulty) {
-            case RANDOM:
+            case RANDOM:    // Deplacement totalement aleatoire
                 direction = getRandomDirection();
                 break;
 
-            case COWARD:
-                double value = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
-                        + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
+            case COWARD:    // S'eloigne du joueur
+                double base = 10.0E-324D;
                 ArrayList<Direction> correctDirections = new ArrayList<>();
+                int diffX = PosX - Ecran.getPlayer().getPosX();
+                int diffY = PosY - Ecran.getPlayer().getPosY();
+                double currentVectorNorm = Math.sqrt((double) (diffX * diffX) + diffY * diffY);
 
-                if (grid[PosY][PosX + 1].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
-                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX + 1));
+                if (currentVectorNorm < 20) {
 
-                    if (vector > value) {
-//                        value = vector;
-                        correctDirections.add(Direction.RIGHT);
+                    if (!isWall(Direction.UP)) {
+                        diffX = PosX - Ecran.getPlayer().getPosX();
+                        diffY = PosY - 1 - Ecran.getPlayer().getPosY();
+                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
+
+                        if (vectorLength > base) {
+                            base = vectorLength;
+                            direction = Direction.UP;
+                        }
                     }
-                }
 
-                if (grid[PosY][PosX - 1].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY)
-                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX - 1));
+                    if (!isWall(Direction.DOWN)) {
+                        diffX = PosX - Ecran.getPlayer().getPosX();
+                        diffY = PosY + 1 - Ecran.getPlayer().getPosY();
+                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
 
-                    if (vector > value) {
-//                        value = vector;
-                        correctDirections.add(Direction.LEFT);
+                        if (vectorLength > base) {
+                            base = vectorLength;
+                            direction = Direction.DOWN;
+                        }
                     }
-                }
 
-                if (grid[PosY + 1][PosX].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY + 1)
-                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
+                    if (!isWall(Direction.RIGHT)) {
+                        diffX = PosX + 1 - Ecran.getPlayer().getPosX();
+                        diffY = PosY - Ecran.getPlayer().getPosY();
+                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
 
-                    if (vector > value) {
-//                        value = vector;
-                        correctDirections.add(Direction.DOWN);
+                        if (vectorLength > base) {
+                            base = vectorLength;
+                            direction = Direction.RIGHT;
+                        }
                     }
-                }
 
-                if (grid[PosY - 1][PosX].getIcon().toString().equals("Black.jpg")) {
-                    double vector = Math.sqrt(Math.pow(2, Ecran.getPlayer().getPosY() - PosY - 1)
-                            + Math.pow(2, Ecran.getPlayer().getPosX() - PosX));
+                    if (!isWall(Direction.LEFT)) {
+                        diffX = PosX - 1 - Ecran.getPlayer().getPosX();
+                        diffY = PosY - Ecran.getPlayer().getPosY();
+                        double vectorLength = Math.sqrt((double) (diffX * diffX + diffY * diffY));
 
-                    if (vector > value) {
-                        correctDirections.add(Direction.UP);
+                        if (vectorLength > base) {
+                            base = vectorLength;
+                            direction = Direction.LEFT;
+                        }
                     }
-                }
-
-                if (correctDirections.size() == 0) {
-                    isRunning = false;
-                    getRandomDirection();
                 } else {
-                    Random randomDirection = new Random();
-                    int newDirection = randomDirection.nextInt(correctDirections.size());
-                    direction = correctDirections.get(newDirection);
+                    direction = getRandomDirection();
+                    moveLength = rnd.nextInt(16) + 10;
                 }
 
+//                if (correctDirections.size() == 0) {
+//                    isRunning = false;
+//                    getRandomDirection();
+//                } else {
+//                    Random randomDirection = new Random();
+//                    int newDirection = randomDirection.nextInt(correctDirections.size());
+//                    direction = correctDirections.get(newDirection);
+//                }
                 break;
 
             case CHASER:
@@ -132,13 +149,13 @@ public class CBot extends CLightCycle {
     private Direction getRandomDirection() {
         ArrayList<Direction> correctDirections = new ArrayList<>();
         // Get coprrect surrounding positions
-        if (!isWall(Direction.RIGHT) && PosX < Ecran.getNbrColonnes()-1)
+        if (!isWall(Direction.RIGHT) && PosX < Ecran.getNbrColonnes() - 1)
             correctDirections.add(Direction.RIGHT);
 
         if (!isWall(Direction.LEFT) && PosX > 0)
             correctDirections.add(Direction.LEFT);
 
-        if (!isWall(Direction.DOWN) && PosY < Ecran.getNbrLignes()-1)
+        if (!isWall(Direction.DOWN) && PosY < Ecran.getNbrLignes() - 1)
             correctDirections.add(Direction.DOWN);
 
         if (!isWall(Direction.UP) && PosY > 0)

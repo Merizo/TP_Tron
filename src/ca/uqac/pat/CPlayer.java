@@ -21,7 +21,7 @@ public class CPlayer extends CLightCycle{
 			display();
 	
 			long endTime = System.currentTimeMillis();
-			
+
 			if (endTime < startTime + fps)
 				try{
 					sleep ((fps - (endTime - startTime)) / Vitesse);
@@ -31,6 +31,8 @@ public class CPlayer extends CLightCycle{
 		}
 	}
 
-	public double getPosX() { return PosX; }
-	public double getPosY() { return PosY; }
+	public int getPosX() { return PosX; }
+	public int getPosY() { return PosY; }
+
+	@Override protected boolean collided() { if(super.collided()) this.Ecran.gameOver(); return false; }
 }
